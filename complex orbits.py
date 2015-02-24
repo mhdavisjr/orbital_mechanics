@@ -71,13 +71,18 @@ class OrbitingObject(MassiveObject):
         accel_x, accel_y = 0, 0
         
         for obj in massive_objects:
-            dist_squared = (self.x - obj.x) ** 2 + (self.y - obj.y) ** 2
+            dist_x = obj.x - self.x
+            dist_y = obj.y - self.y
+
+            dist_squared = dist_x*dist_x + dist_y*dist_y
+            dist_squared_sqrt = math.sqrt(dist_squared)
+
             if dist_squared < 0.0001:
                 continue  #Operating on self or very close. Ignore these objecs or it creates errors
             #elif dist_squared < self.radius + obj.radius: collision
 
-            accel_x += G * obj.mass / dist_squared * (obj.x - self.x) / math.sqrt(dist_squared)
-            accel_y += G * obj.mass / dist_squared * (obj.y - self.y) / math.sqrt(dist_squared)
+            accel_x += G * obj.mass / dist_squared * dist_x / dist_squared_sqrt
+            accel_y += G * obj.mass / dist_squared * dist_y / dist_squared_sqrt
             
         return accel_x, accel_y
 
